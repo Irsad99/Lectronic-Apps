@@ -1,1 +1,1 @@
-package interface
+package interfaces
