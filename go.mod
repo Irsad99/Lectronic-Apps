@@ -12,6 +12,8 @@ require (
 	gorm.io/gorm v1.23.7
 )
 
+require github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
+
 require (
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect
@@ -26,6 +28,7 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
+	github.com/veritrans/go-midtrans v0.0.0-20210616100512-16326c5eeb00
 	golang.org/x/sys v0.0.0-20210806184541-e5e7981a1069 // indirect
 	golang.org/x/text v0.3.7 // indirect
 )
