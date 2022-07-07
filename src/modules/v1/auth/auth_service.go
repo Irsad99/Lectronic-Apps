@@ -15,6 +15,10 @@ func NewService(repository interfaces.UserRepository) *service {
 }
 
 func (s *service) Login(input input.AuthInput) *helpers.Response {
+	if err := helpers.ValidationError(input); err != nil {
+		return helpers.New(err.Error(), 401, false)
+	}
+
 	user, err := s.repository.FindByEmail(input.Email)
 	if err != nil {
 		return helpers.New("email/password incorrect, please correct this", 401, false)
