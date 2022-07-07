@@ -3,7 +3,8 @@ package routers
 import (
 	"net/http"
 
-	// database "github.com/Irsad99/LectronicApp/src/database/gorm"
+	database "github.com/Irsad99/LectronicApp/src/database/gorm"
+	"github.com/Irsad99/LectronicApp/src/modules/v1/products"
 
 	// "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -12,12 +13,13 @@ import (
 func New() (*mux.Router, error) {
 	mainRoute := mux.NewRouter()
 
-	// db, err := database.New()
-	// if err != nil {
-	// 	return nil, err
-	// }
+	db, err := database.New()
+	if err != nil {
+		return nil, err
+	}
 
 	mainRoute.HandleFunc("/", sampleHandler).Methods("GET")
+	products.New(mainRoute, db)
 
 	return mainRoute, nil
 }

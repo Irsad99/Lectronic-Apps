@@ -7,7 +7,7 @@ import (
 )
 
 func New(rt *mux.Router, db *gorm.DB) {
-	route := rt.PathPrefix("/vehicle").Subrouter()
+	route := rt.PathPrefix("/product").Subrouter()
 
 	repo := NewRepo(db)
 	svc := NewService(repo)
