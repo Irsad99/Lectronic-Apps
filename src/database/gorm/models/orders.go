@@ -4,7 +4,7 @@ import "time"
 
 type Order struct {
 	ID          uint64     `json:"id"`
-	ProductID   uint64     `json:"product_id"`
+	ProductID   []uint64   `json:"product_id"`
 	UserID      uint64     `json:"user_id"`
 	Status      string     `json:"status"`
 	TotalPrice  float64    `json:"total_price"`

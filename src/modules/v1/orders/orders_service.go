@@ -1,17 +1,22 @@
 package orders
 
 import (
+	"time"
+
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
 )
 
 type service struct {
-	repository interfaces.OrderRepository
+	repository     interfaces.OrderRepository
+	userRepo       interfaces.UserRepository
+	paymentService interfaces.PaymentService
 }
 
-func NewService(repository interfaces.OrderRepository) *service {
-	return &service{repository: repository}
+func NewService(repository interfaces.OrderRepository, userRepo interfaces.UserRepository, paymentService interfaces.PaymentService) *service {
+	return &service{repository, userRepo, paymentService}
 }
 
 func (s *service) FindAll() (*helpers.Response, error) {
@@ -23,7 +28,7 @@ func (s *service) FindAll() (*helpers.Response, error) {
 	return helpers.New(orders, 200, true), nil
 }
 
-func (s *service) FindByID(id string) (*helpers.Response, error) {
+func (s *service) FindByID(id int) (*helpers.Response, error) {
 	order, err := s.repository.FindByID(id)
 	if err != nil {
 		return nil, err
@@ -32,7 +37,7 @@ func (s *service) FindByID(id string) (*helpers.Response, error) {
 	return helpers.New(order, 200, true), nil
 }
 
-func (s *service) FindByUserID(id string) (*helpers.Response, error) {
+func (s *service) FindByUserID(id int) (*helpers.Response, error) {
 	order, err := s.repository.FindByUserID(id)
 	if err != nil {
 		return nil, err
@@ -41,22 +46,42 @@ func (s *service) FindByUserID(id string) (*helpers.Response, error) {
 	return helpers.New(order, 200, true), nil
 }
 
-func (s *service) Create(order *models.Order) (*helpers.Response, error) {
-	order, err := s.repository.Save(order)
+func (s *service) Create(id uint64, input *input.OrderInput) (*helpers.Response, error) {
+	var order models.Order
+
+	order.ProductID = input.ProductID
+	order.UserID = id
+	order.Status = "pending"
+	order.TotalPrice = input.TotalPrice
+	order.PaidAt = time.Now()
+	order.CreatedAt = time.Now()
+	order.UpdatedAt = time.Now()
+
+	user, err := s.repository.GetID(id)
 	if err != nil {
 		return nil, err
 	}
 
-	return helpers.New(order, 200, true), nil
+	paymentUrl, err := s.paymentService.GetPaymentURL(order.ID, order, user)
+	if err != nil {
+		return nil, err
+	}
+
+	order.PaymentURL = paymentUrl
+
+	newOrder, err := s.repository.Save(&order)
+	if err != nil {
+		return nil, err
+	}
+
+	return helpers.New(newOrder, 200, true), nil
 }
 
-func (s *service) Update(id string, input *models.Order) (*helpers.Response, error) {
-	data, err := s.repository.FindByID(id)
+func (s *service) Update(id int, input *models.Order) (*helpers.Response, error) {
+	_, err := s.repository.FindByID(id)
 	if err != nil {
 		return nil, err
 	}
-
-	data.Status = input.Status
 
 	order, err := s.repository.Update(input)
 	if err != nil {
@@ -66,7 +91,7 @@ func (s *service) Update(id string, input *models.Order) (*helpers.Response, err
 	return helpers.New(order, 200, true), nil
 }
 
-func (s *service) Delete(id string) (*helpers.Response, error) {
+func (s *service) Delete(id int) (*helpers.Response, error) {
 	err := s.repository.Delete(id)
 	if err != nil {
 		return nil, err

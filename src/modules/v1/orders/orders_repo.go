@@ -24,7 +24,7 @@ func (r *repository) FindAll() (*models.Orders, error) {
 	return orders, nil
 }
 
-func (r *repository) FindByID(id string) (*models.Order, error) {
+func (r *repository) FindByID(id int) (*models.Order, error) {
 	var order *models.Order
 
 	err := r.db.First(&order, id).Error
@@ -35,7 +35,7 @@ func (r *repository) FindByID(id string) (*models.Order, error) {
 	return order, nil
 }
 
-func (r *repository) FindByUserID(id string) (*models.Order, error) {
+func (r *repository) FindByUserID(id int) (*models.Order, error) {
 	var order *models.Order
 
 	err := r.db.Where("user_id = ?", id).First(order).Error
@@ -64,7 +64,7 @@ func (r *repository) Update(order *models.Order) (*models.Order, error) {
 	return order, nil
 }
 
-func (r *repository) Delete(id string) error {
+func (r *repository) Delete(id int) error {
 	var order *models.Order
 
 	err := r.db.Where("id = ?", id).Delete(&order).Error
