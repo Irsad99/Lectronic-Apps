@@ -3,6 +3,8 @@ package helpers
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type Response struct {
@@ -58,4 +60,14 @@ func getStatus(status int) string {
 	}
 
 	return desc
+}
+
+func ValidationError(data interface{}) error {
+	validate := validator.New()
+	err := validate.Struct(data)
+	if err != nil {
+		validationErrors := err.(validator.ValidationErrors)
+		return validationErrors
+	}
+	return nil
 }
