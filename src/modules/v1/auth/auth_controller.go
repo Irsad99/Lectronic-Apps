@@ -20,12 +20,12 @@ func NewController(service interfaces.AuthService) *controller {
 func (c *controller) Login(w http.ResponseWriter, r *http.Request) {
 	var input input.AuthInput
 
+	json.NewDecoder(r.Body).Decode(&input)
+
 	if err := helpers.ValidationError(input); err != nil {
 		helpers.New(err.Error(), 401, true)
 		return
 	}
-
-	json.NewDecoder(r.Body).Decode(&input)
 
 	c.service.Login(input).Send(w)
 }
