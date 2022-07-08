@@ -7,6 +7,8 @@ import (
 	"strconv"
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
+	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
 	"github.com/gorilla/mux"
 )
@@ -69,16 +71,21 @@ func (ctrl *user_ctrl) GetEmail(w http.ResponseWriter, r *http.Request) {
 func (ctrl *user_ctrl) AddUser(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data models.User
-	json.NewDecoder(r.Body).Decode(&data)
+	var input input.RegisterInput
+	json.NewDecoder(r.Body).Decode(&input)
 
-	result, err := ctrl.svc.AddUser(&data)
+	if err := helpers.ValidationError(input); err != nil {
+		helpers.New(err.Error(), 401, true)
+		return
+	}
+
+	result, err := ctrl.svc.AddUser(&input)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	json.NewEncoder(w).Encode(result)
+	result.Send(w)
 }
 
 // UPDATE USER
@@ -95,7 +102,7 @@ func (ctrl *user_ctrl) Update(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, err.Error())
 	}
 
-	result, err := ctrl.svc.Update(id, &data)
+	result, err := ctrl.svc.Update(uint(id), &data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
@@ -120,4 +127,33 @@ func (ctrl *user_ctrl) Delete(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(result)
+}
+
+func (ctrl *user_ctrl) VerifyEmail(w http.ResponseWriter, r *http.Request) {
+	token := r.URL.Query().Get("i")
+
+	result, err := ctrl.svc.Verify(token)
+	if err != nil {
+		fmt.Fprint(w, err.Error())
+	}
+
+	result.Send(w)
+}
+
+func (ctrl *user_ctrl) UploadAvatar(w http.ResponseWriter, r *http.Request) {
+	// Maximum upload of 1 MB files
+	r.ParseMultipartForm(1 << 2)
+
+	// Get handler for filename, size and headers
+	file, handler, err := r.FormFile("avatar")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return
+	}
+
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
 }
