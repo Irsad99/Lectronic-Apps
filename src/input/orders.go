@@ -1,8 +1,8 @@
 package input
 
 type OrderInput struct {
-	ProductID  []uint64 `json:"product_id"`
-	TotalPrice float64  `json:"total_price"`
+	ProductID uint64 `json:"product_id"`
+	// TotalPrice int64    `json:"total_price"`
 }
 
 type OrderNotificationInput struct {

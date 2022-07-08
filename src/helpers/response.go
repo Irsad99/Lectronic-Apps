@@ -15,8 +15,6 @@ type Response struct {
 }
 
 func (res *Response) Send(w http.ResponseWriter) {
-	w.Header().Set("Content-Type", "application/json")
-
 	err := json.NewEncoder(w).Encode(res)
 	if err != nil {
 		w.Write([]byte("Error When Encode respone"))

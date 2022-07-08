@@ -16,7 +16,8 @@ func NewRepository(db *gorm.DB) *repository {
 func (r *repository) FindAll() (*models.Orders, error) {
 	var orders *models.Orders
 
-	err := r.db.Order("id desc").Preload("Images", "vehicle_images.is_primary = true").Find(&orders).Error
+	// err := r.db.Order("id desc").Preload("Images", "vehicle_images.is_primary = true").Find(&orders).Error
+	err := r.db.Order("id desc").Find(&orders).Error
 	if err != nil {
 		return nil, err
 	}
@@ -35,10 +36,10 @@ func (r *repository) FindByID(id int) (*models.Order, error) {
 	return order, nil
 }
 
-func (r *repository) FindByUserID(id int) (*models.Order, error) {
-	var order *models.Order
+func (r *repository) FindByUserID(id int) (*models.Orders, error) {
+	var order *models.Orders
 
-	err := r.db.Where("user_id = ?", id).First(order).Error
+	err := r.db.Where("user_id = ?", id).Find(&order).Error
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +48,7 @@ func (r *repository) FindByUserID(id int) (*models.Order, error) {
 }
 
 func (r *repository) Save(order *models.Order) (*models.Order, error) {
-	err := r.db.Create(order).Error
+	err := r.db.Create(&order).Error
 	if err != nil {
 		return nil, err
 	}
