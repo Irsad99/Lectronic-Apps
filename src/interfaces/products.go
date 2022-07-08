@@ -3,6 +3,7 @@ package interfaces
 import (
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 )
 
 type ProductRepo interface {
@@ -20,7 +21,7 @@ type ProductService interface {
 	FindByID(id int) (*helpers.Response, error)
 	SearchByName(name string) (*helpers.Response, error)
 	SortByCategory(category string) (*helpers.Response, error)
-	Add(data *models.Product) (*helpers.Response, error)
+	Add(data *input.InputProduct) (*helpers.Response, error)
 	Delete(id int) (*helpers.Response, error)
 	Update(id int, data *models.Product) (*helpers.Response, error)
 }
