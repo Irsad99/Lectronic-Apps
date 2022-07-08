@@ -8,6 +8,8 @@ import (
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
+	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 
 	"github.com/gorilla/mux"
 )
@@ -25,7 +27,7 @@ func (ctrl *product_ctrl) FindAll(w http.ResponseWriter, r *http.Request) {
 
 	data, err := ctrl.svc.FindAll()
 	if err != nil {
-		fmt.Fprint(w, err.Error())
+		helpers.New(data, 404, true).Send(w)
 	}
 
 	json.NewEncoder(w).Encode(data)
@@ -37,7 +39,7 @@ func (ctrl *product_ctrl) FindByID(w http.ResponseWriter, r *http.Request) {
 	var dataID = r.URL.Query()
 	id, err := strconv.Atoi(dataID["id"][0])
 	if err != nil {
-		fmt.Fprint(w, err.Error())
+		helpers.New(id, 400, true).Send(w)
 	}
 
 	data, err := ctrl.svc.FindByID(id)
@@ -79,8 +81,12 @@ func (ctrl *product_ctrl) SortByCategory(w http.ResponseWriter, r *http.Request)
 func (ctrl *product_ctrl) AddData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data models.Product
+	var data input.InputProduct
 	json.NewDecoder(r.Body).Decode(&data)
+
+	if err := helpers.ValidationError(data); err != nil {
+		helpers.New(err, 400, true).Send(w)
+	}
 
 	result, err := ctrl.svc.Add(&data)
 	if err != nil {
@@ -96,7 +102,7 @@ func (ctrl *product_ctrl) Delete(w http.ResponseWriter, r *http.Request) {
 	var data = mux.Vars(r)
 	id, err := strconv.Atoi(data["id"])
 	if err != nil {
-		fmt.Fprint(w, err.Error())
+		helpers.New(data, 400, true).Send(w)
 	}
 
 	result, err := ctrl.svc.Delete(id)
@@ -126,4 +132,22 @@ func (ctrl *product_ctrl) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	json.NewEncoder(w).Encode(&result)
+}
+
+func (ctrl *product_ctrl) UploadAvatar(w http.ResponseWriter, r *http.Request) {
+	// Maximum upload of 1 MB files
+	r.ParseMultipartForm(1 << 2)
+
+	// Get handler for filename, size and headers
+	file, handler, err := r.FormFile("avatar")
+	if err != nil {
+		fmt.Println("Error Retrieving the File")
+		fmt.Println(err)
+		return
+	}
+
+	defer file.Close()
+	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
+	fmt.Printf("File Size: %+v\n", handler.Size)
+	fmt.Printf("MIME Header: %+v\n", handler.Header)
 }

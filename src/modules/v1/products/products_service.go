@@ -4,6 +4,7 @@ import (
 	// "github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
 	// "github.com/asaskevich/govalidator"
 )
@@ -64,11 +65,19 @@ func (svc *product_service) SortByCategory(category string) (*helpers.Response, 
 	return res, nil
 }
 
-func (svc *product_service) Add(data *models.Product) (*helpers.Response, error) {
+func (svc *product_service) Add(data *input.InputProduct) (*helpers.Response, error) {
 
 	// var product models.Product
+	var product models.Product
 
-	result, err := svc.repo.Add(data)
+	product.Name = data.Name
+	product.Price = data.Price
+	product.Category = data.Category
+	product.Description = data.Description
+	product.Image = data.Image
+	product.Stock = data.Stock
+
+	result, err := svc.repo.Add(&product)
 	if err != nil {
 		res := helpers.New(result, 400, true)
 		return res, nil

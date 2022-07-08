@@ -8,9 +8,9 @@ type Product struct {
 	Price       string    `json:"price" valid:"type(string), required"`
 	Category    string    `json:"category" valid:"type(string), required"`
 	Description string    `json:"description" valid:"type(string), required"`
-	Stock       string    `json:"stock" valid:"type(int), required"`
+	Stock       int       `json:"stock" valid:"type(int), required"`
 	Image       string    `json:"image" valid:"type(string), required"`
-	Sold        string    `json:"sold" valid:"type(int), required"`
+	Sold        int       `json:"sold" valid:"type(int), required"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }

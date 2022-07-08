@@ -119,7 +119,7 @@ func (repo *product_repo) Update(id int, data *models.Product) (*models.Product,
 
 	var product models.Product
 
-	result := repo.db.Model(&models.Product{}).Where("vehicle_id = ?", id).Updates(&models.Product{Name: data.Name, Price: data.Price, Category: data.Category, Description: data.Description, Stock: data.Stock, Image: data.Image, Sold: data.Sold})
+	result := repo.db.Model(&models.Product{}).Where("id_product = ?", id).Updates(&models.Product{Name: data.Name, Price: data.Price, Category: data.Category, Description: data.Description, Stock: data.Stock, Image: data.Image, Sold: data.Sold})
 
 	if result.Error != nil {
 		return nil, errors.New("gagal meng-update data")
