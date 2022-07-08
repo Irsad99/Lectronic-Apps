@@ -1,6 +1,8 @@
 package interfaces
 
 import (
+	"mime/multipart"
+
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
 	"github.com/Irsad99/LectronicApp/src/input"
@@ -23,4 +25,5 @@ type UserService interface {
 	Update(id uint, data *models.User) (*helpers.Response, error)
 	Delete(id int) (*helpers.Response, error)
 	Verify(token string) (*helpers.Response, error)
+	Upload(id int, file multipart.File, handle *multipart.FileHeader) (*helpers.Response, error)
 }
