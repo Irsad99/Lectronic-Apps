@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	database "github.com/Irsad99/LectronicApp/src/database/gorm"
+	"github.com/Irsad99/LectronicApp/src/modules/v1/auth"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/products"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/users"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/auth"
@@ -21,6 +22,8 @@ func New() (*mux.Router, error) {
 	}
 
 	mainRoute.HandleFunc("/", sampleHandler).Methods("GET")
+
+	auth.NewRouter(mainRoute, db)
 	products.New(mainRoute, db)
 	users.New(mainRoute, db)
 	auth.New(mainRoute, db)

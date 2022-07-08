@@ -17,7 +17,7 @@ func NewRepo(grm *gorm.DB) *user_repo {
 
 // GET ALL USER
 func (repo *user_repo) GetAll() (*models.Users, error) {
-	
+
 	var users models.Users
 	result := repo.db.Order("id_user desc").Find(&users)
 
@@ -74,10 +74,10 @@ func (repo *user_repo) AddUser(data *models.User) (*models.User, error) {
 }
 
 // UPDATE USER
-func (repo *user_repo) Update(id int, data *models.User) (*models.User, error) {
+func (repo *user_repo) Update(id uint, data *models.User) (*models.User, error) {
 	var users models.User
 
-	result := repo.db.Model(&models.User{}).Where("id_user = ?", id).Updates(&models.User{Fullname: data.Fullname, Address: data.Address, Image: data.Image, Birthdate: data.Birthdate, Phone: data.Phone, Gender: data.Gender})
+	result := repo.db.Model(&models.User{}).Where("id_user = ?", id).Updates(&models.User{Fullname: data.Fullname, Address: data.Address, Image: data.Image, Birthdate: data.Birthdate, Phone: data.Phone, Gender: data.Gender, Verified: data.Verified})
 
 	if result.Error != nil {
 		return nil, errors.New("gagal meng-update data")
