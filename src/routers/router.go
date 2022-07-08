@@ -7,7 +7,7 @@ import (
 	"github.com/Irsad99/LectronicApp/src/modules/v1/auth"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/products"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/users"
-	"github.com/Irsad99/LectronicApp/src/modules/v1/auth"
+	"github.com/Irsad99/LectronicApp/src/modules/v1/orders"
 
 	// "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
@@ -23,10 +23,10 @@ func New() (*mux.Router, error) {
 
 	mainRoute.HandleFunc("/", sampleHandler).Methods("GET")
 
+	products.NewRouter(mainRoute, db)
+	users.NewRouter(mainRoute, db)
 	auth.NewRouter(mainRoute, db)
-	products.New(mainRoute, db)
-	users.New(mainRoute, db)
-	auth.New(mainRoute, db)
+	orders.NewRouter(mainRoute, db)
 
 	return mainRoute, nil
 }
