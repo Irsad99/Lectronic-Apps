@@ -77,7 +77,7 @@ func (repo *user_repo) AddUser(data *models.User) (*models.User, error) {
 func (repo *user_repo) Update(id int, data *models.User) (*models.User, error) {
 	var users models.User
 
-	result := repo.db.Model(&models.User{}).Where("vehicle_id = ?", id).Updates(&models.User{Fullname: data.Fullname, Address: data.Address, Image: data.Image, Birthdate: data.Birthdate, Phone: data.Phone, Gender: data.Gender})
+	result := repo.db.Model(&models.User{}).Where("id_user = ?", id).Updates(&models.User{Fullname: data.Fullname, Address: data.Address, Image: data.Image, Birthdate: data.Birthdate, Phone: data.Phone, Gender: data.Gender})
 
 	if result.Error != nil {
 		return nil, errors.New("gagal meng-update data")
