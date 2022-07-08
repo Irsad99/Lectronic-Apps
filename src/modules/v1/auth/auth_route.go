@@ -6,7 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func New(r *mux.Router, db *gorm.DB) {
+func NewRouter(r *mux.Router, db *gorm.DB) {
 	route := r.PathPrefix("/auth").Subrouter()
 
 	repository := users.NewRepo(db)
