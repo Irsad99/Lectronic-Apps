@@ -25,6 +25,6 @@ func New(rt *mux.Router, db *gorm.DB) {
 
 	route.HandleFunc("/email", ctrl.GetEmail).Methods("GET")
 
-	route.HandleFunc("/delete/{id_user}", ctrl.Delete).Methods("DELETE")
-	route.HandleFunc("/update", ctrl.Update).Methods("PUT")
+	route.HandleFunc("/delete/{id_user}", middleware.Do(ctrl.Delete, middleware.CheckAuth, middleware.CheckRoleAdmin)).Methods("DELETE")
+	route.HandleFunc("/update", middleware.Do(ctrl.Update, middleware.CheckAuth)).Methods("PUT")
 }
