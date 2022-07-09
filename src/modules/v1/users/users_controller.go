@@ -141,19 +141,44 @@ func (ctrl *user_ctrl) VerifyEmail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *user_ctrl) UploadAvatar(w http.ResponseWriter, r *http.Request) {
-	// Maximum upload of 1 MB files
-	r.ParseMultipartForm(1 << 2)
-
-	// Get handler for filename, size and headers
-	file, handler, err := r.FormFile("avatar")
+	i := r.Header.Get("user_id")
+	id, err := strconv.Atoi(i)
 	if err != nil {
-		fmt.Println("Error Retrieving the File")
-		fmt.Println(err)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
+	file, handler, err := r.FormFile("avatar")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
 	defer file.Close()
-	fmt.Printf("Uploaded File: %+v\n", handler.Filename)
-	fmt.Printf("File Size: %+v\n", handler.Size)
-	fmt.Printf("MIME Header: %+v\n", handler.Header)
+
+	result, err := ctrl.svc.Upload(id, file, handler)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	result.Send(w)
+}
+
+func (ctrl *user_ctrl) MyProfile(w http.ResponseWriter, r *http.Request) {
+	i := r.Header.Get("user_id")
+	id, err := strconv.Atoi(i)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	fmt.Println(id)
+
+	result, err := ctrl.svc.GetId(id)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	result.Send(w)
 }
