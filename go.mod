@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
 	github.com/cheekybits/is v0.0.0-20150225183255-68e9c0620927 // indirect
 	github.com/creasty/defaults v1.5.1 // indirect
 	github.com/google/uuid v1.2.0 // indirect
