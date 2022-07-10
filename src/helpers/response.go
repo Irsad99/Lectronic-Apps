@@ -2,8 +2,10 @@ package helpers
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
+	"github.com/asaskevich/govalidator"
 	"github.com/go-playground/validator/v10"
 )
 
@@ -70,6 +72,15 @@ func ValidationError(data interface{}) error {
 	if err != nil {
 		validationErrors := err.(validator.ValidationErrors)
 		return validationErrors
+	}
+	return nil
+}
+
+func Validation(dataString ...string) error {
+	for _, value := range dataString {
+		if boolName := govalidator.IsAlpha(value); !boolName {
+			return errors.New("value : {"+ value +"} / please fill in the column with string data type /")
+		}
 	}
 	return nil
 }
