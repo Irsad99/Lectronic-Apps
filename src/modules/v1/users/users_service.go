@@ -2,6 +2,7 @@ package users
 
 import (
 	"fmt"
+	"mime/multipart"
 	"time"
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
@@ -147,5 +148,30 @@ func (svc *user_service) Verify(token string) (*help.Response, error) {
 	}
 
 	res := help.New("Your account has been verified", 200, false)
+	return res, nil
+}
+
+func (svc *user_service) Upload(id int, file multipart.File, handle *multipart.FileHeader) (*help.Response, error) {
+	user, err := svc.rep.GetId(id)
+	if err != nil {
+		res := help.New(err.Error(), 400, true)
+		return res, nil
+	}
+
+	images, err := help.UploadImages("avatar", file, handle)
+	if err != nil {
+		res := help.New(err.Error(), 400, true)
+		return res, nil
+	}
+
+	user.Image = images.URL
+
+	_, err = svc.rep.Update(uint(id), user)
+	if err != nil {
+		res := help.New(err.Error(), 400, true)
+		return res, nil
+	}
+
+	res := help.New("Upload file successfully", 200, false)
 	return res, nil
 }
