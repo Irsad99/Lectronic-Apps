@@ -1,6 +1,7 @@
 package orders
 
 import (
+	"strconv"
 	"time"
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
@@ -12,11 +13,12 @@ import (
 type service struct {
 	repository     interfaces.OrderRepository
 	userRepo       interfaces.UserRepo
+	productRepo    interfaces.ProductRepo
 	paymentService interfaces.PaymentService
 }
 
-func NewService(repository interfaces.OrderRepository, userRepo interfaces.UserRepo, paymentService interfaces.PaymentService) *service {
-	return &service{repository, userRepo, paymentService}
+func NewService(repository interfaces.OrderRepository, userRepo interfaces.UserRepo, paymentService interfaces.PaymentService, productRepo interfaces.ProductRepo) *service {
+	return &service{repository, userRepo, productRepo, paymentService}
 }
 
 func (s *service) FindAll() (*helpers.Response, error) {
@@ -49,10 +51,17 @@ func (s *service) FindByUserID(id int) (*helpers.Response, error) {
 func (s *service) Create(id uint64, input *input.OrderInput) (*helpers.Response, error) {
 	var order models.Order
 
+	product, err := s.productRepo.FindByID(int(input.ProductID))
+	if err != nil {
+		return nil, err
+	}
+
+	price, _ := strconv.Atoi(product.Price)
+
 	order.ProductID = input.ProductID
 	order.UserID = id
 	order.Status = "pending"
-	order.TotalPrice = input.TotalPrice
+	order.TotalPrice = int64(price)
 	order.PaidAt = time.Now()
 	order.CreatedAt = time.Now()
 	order.UpdatedAt = time.Now()
@@ -62,7 +71,7 @@ func (s *service) Create(id uint64, input *input.OrderInput) (*helpers.Response,
 		return nil, err
 	}
 
-	paymentUrl, err := s.paymentService.GetPaymentURL(int(id), &order, user)
+	paymentUrl, err := s.paymentService.GetPaymentURL(order.ID, &order, user)
 	if err != nil {
 		return nil, err
 	}

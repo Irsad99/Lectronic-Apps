@@ -9,7 +9,7 @@ import (
 type OrderRepository interface {
 	FindAll() (*models.Orders, error)
 	FindByID(id int) (*models.Order, error)
-	FindByUserID(id int) (*models.Order, error)
+	FindByUserID(id int) (*models.Orders, error)
 	Save(order *models.Order) (*models.Order, error)
 	Update(order *models.Order) (*models.Order, error)
 	Delete(id int) error

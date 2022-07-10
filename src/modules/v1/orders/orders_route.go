@@ -1,6 +1,7 @@
 package orders
 
 import (
+	"github.com/Irsad99/LectronicApp/src/middleware"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/payments"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/products"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/users"
@@ -15,12 +16,12 @@ func NewRouter(r *mux.Router, db *gorm.DB) {
 	userRepo := users.NewRepo(db)
 	productRepo := products.NewRepo(db)
 	paymentService := payments.NewService(repository, productRepo)
-	service := NewService(repository, userRepo, paymentService)
+	service := NewService(repository, userRepo, paymentService, productRepo)
 	controller := NewController(service, paymentService)
 
-	route.HandleFunc("/new", controller.NewOrder).Methods("POST")
-	route.HandleFunc("/:id", controller.GetOrderDetail).Methods("GET")
-	route.HandleFunc("/me", controller.MyOrder).Methods("GET")
+	route.HandleFunc("/new", middleware.Do(controller.NewOrder, middleware.CheckAuth)).Methods("POST")
+	route.HandleFunc("/:id", middleware.Do(controller.GetOrderDetail, middleware.CheckAuth)).Methods("GET")
+	route.HandleFunc("/me", middleware.Do(controller.MyOrder, middleware.CheckAuth)).Methods("GET")
 	route.HandleFunc("/notification", controller.GetNotificationOrder).Methods("POST")
 
 	// ADMIN ACCESS

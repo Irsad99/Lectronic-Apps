@@ -37,8 +37,9 @@ func (c *controller) FindAll(w http.ResponseWriter, r *http.Request) {
 func (c *controller) GetOrderDetail(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	params := mux.Vars(r)["id"]
-	id, err := strconv.Atoi(params)
+	params := mux.Vars(r)
+	oid := params["id"]
+	id, err := strconv.Atoi(oid)
 	if err != nil {
 		fmt.Println("error")
 	}
@@ -53,6 +54,8 @@ func (c *controller) GetOrderDetail(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) MyOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	h := r.Header.Get("user_id")
 	id, err := strconv.Atoi(h)
 	if err != nil {
@@ -96,6 +99,8 @@ func (c *controller) NewOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) UpdateOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	params := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(params)
 	if err != nil {
@@ -120,6 +125,8 @@ func (c *controller) UpdateOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) DeleteOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	params := mux.Vars(r)["id"]
 	id, err := strconv.Atoi(params)
 	if err != nil {
@@ -136,6 +143,8 @@ func (c *controller) DeleteOrder(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *controller) GetNotificationOrder(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
 	var input input.OrderNotificationInput
 
 	json.NewDecoder(r.Body).Decode(&input)

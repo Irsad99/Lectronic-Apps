@@ -20,8 +20,8 @@ func NewService(orderRepository interfaces.OrderRepository, productRepository in
 	return &service{orderRepository, productRepository}
 }
 
-func (s *service) GetPaymentURL(orderID int, order *models.Order, user *models.User) (string, error) {
-	oid := strconv.Itoa(orderID)
+func (s *service) GetPaymentURL(orderID uint64, order *models.Order, user *models.User) (string, error) {
+	oid := strconv.FormatUint(orderID, 10)
 
 	midclient := midtrans.NewClient()
 	midclient.ServerKey = os.Getenv("MIDTRANS_SERVER")
@@ -39,7 +39,7 @@ func (s *service) GetPaymentURL(orderID int, order *models.Order, user *models.U
 		},
 		TransactionDetails: midtrans.TransactionDetails{
 			OrderID:  oid,
-			GrossAmt: int64(order.TotalPrice),
+			GrossAmt: order.TotalPrice,
 		},
 	}
 

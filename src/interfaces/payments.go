@@ -7,6 +7,6 @@ import (
 )
 
 type PaymentService interface {
-	GetPaymentURL(orderID int, order *models.Order, user *models.User) (string, error)
+	GetPaymentURL(orderID uint64, order *models.Order, user *models.User) (string, error)
 	ProcessPayment(input *input.OrderNotificationInput) (*helpers.Response, error)
 }
