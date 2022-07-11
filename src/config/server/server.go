@@ -39,7 +39,7 @@ func serve(cmd *cobra.Command, args []string) error {
 
 		handler := c.Handler(mainRoute)
 
-		if pr := os.Getenv("APP_PORT"); pr != "" {
+		if pr := os.Getenv("PORT"); pr != "" {
 			addrs = ":" + pr
 		}
 
