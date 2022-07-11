@@ -1,10 +1,10 @@
 package input
 
 type InputProduct struct {
-	Name        string `json:"name" validate:"type(string) required"`
-	Price       string `json:"price" validate:"type(string) required"`
-	Stock       int    `json:"stock" validate:"type(string) required"`
-	Description string `json:"description" validate:"type(string) required"`
-	Category    string `json:"category" validate:"type(string) required"`
+	Name        string `json:"name" valid:"type(string) required"`
+	Price       string `json:"price" valid:"type(string) required"`
+	Stock       int `json:"stock" valid:"type(string) required"`
+	Description string `json:"description" valid:"type(string) required"`
+	Category    string `json:"category" valid:"type(string) required"`
 	Image       string `json:"image"`
 }

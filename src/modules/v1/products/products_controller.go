@@ -8,6 +8,7 @@ import (
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
 	"github.com/asaskevich/govalidator"
 
@@ -82,7 +83,7 @@ func (ctrl *product_ctrl) SortByCategory(w http.ResponseWriter, r *http.Request)
 func (ctrl *product_ctrl) AddData(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	var data models.Product
+	var data input.InputProduct
 	var decoder = schema.NewDecoder()
 
 	err := r.ParseForm()
@@ -117,11 +118,11 @@ func (ctrl *product_ctrl) AddData(w http.ResponseWriter, r *http.Request) {
 		return 
 	}
 
-	_, err = govalidator.ValidateStruct(data)
-	if err != nil {
-		helpers.New(err.Error(), 400, true).Send(w)
-		return 
-	}
+	// _, err = govalidator.ValidateStruct(data)
+	// if err != nil {
+	// 	helpers.New(err.Error(), 400, true).Send(w)
+	// 	return 
+	// }
 
 	result, err := ctrl.svc.Add(&data, file, handler)
 	if err != nil {

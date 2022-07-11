@@ -15,7 +15,7 @@ func NewRouter(rt *mux.Router, db *gorm.DB) {
 	svc := NewService(repo, verifyReppo)
 	ctrl := NewCtrl(svc)
 
-	route.HandleFunc("/", ctrl.GetAll).Methods("GET")
+	route.HandleFunc("/", middleware.Do(ctrl.GetAll, middleware.CheckAuth, middleware.CheckRoleAdmin)).Methods("GET")
 	route.HandleFunc("/register", ctrl.AddUser).Methods("POST")
 	route.HandleFunc("/me", middleware.Do(ctrl.MyProfile, middleware.CheckAuth)).Methods("GET")
 	route.HandleFunc("/verify", ctrl.VerifyEmail).Methods("GET")

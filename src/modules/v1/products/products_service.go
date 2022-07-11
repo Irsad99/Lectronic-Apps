@@ -6,6 +6,7 @@ import (
 
 	"github.com/Irsad99/LectronicApp/src/database/gorm/models"
 	"github.com/Irsad99/LectronicApp/src/helpers"
+	"github.com/Irsad99/LectronicApp/src/input"
 
 	// "github.com/Irsad99/LectronicApp/src/input"
 	"github.com/Irsad99/LectronicApp/src/interfaces"
@@ -68,10 +69,10 @@ func (svc *product_service) SortByCategory(category string) (*helpers.Response, 
 	return res, nil
 }
 
-func (svc *product_service) Add(data *models.Product, file multipart.File, handle *multipart.FileHeader) (*helpers.Response, error) {
+func (svc *product_service) Add(data *input.InputProduct, file multipart.File, handle *multipart.FileHeader) (*helpers.Response, error) {
 
 	// var product models.Product
-	// var product models.Product
+	var product models.Product
 
 	images, err := helpers.UploadImages("avatar", file, handle)
 	if err != nil {
@@ -79,15 +80,14 @@ func (svc *product_service) Add(data *models.Product, file multipart.File, handl
 		return res, nil
 	}
 
-	// product.Name = data.Name
-	// product.Price = data.Price
-	// product.Category = data.Category
-	// product.Description = data.Description
-	// product.Image = data.Image
-	// product.Stock = data.Stock
-
-	data.Image = images.URL
-	result, err := svc.repo.Add(data)
+	product.Name = data.Name
+	product.Price = data.Price
+	product.Category = data.Category
+	product.Description = data.Description
+	product.Image = images.URL
+	product.Stock = data.Stock
+	
+	result, err := svc.repo.Add(&product)
 	if err != nil {
 		res := helpers.New(result, 400, true)
 		return res, nil
@@ -122,7 +122,7 @@ func (svc *product_service) Update(id int, data *models.Product) (*helpers.Respo
 }
 
 func (svc *product_service) Upload(id int, file multipart.File, handle *multipart.FileHeader) (*helpers.Response, error) {
-	
+
 	data, err := svc.repo.FindByID(id)
 	if err != nil {
 		res := helpers.New(err.Error(), 400, true)

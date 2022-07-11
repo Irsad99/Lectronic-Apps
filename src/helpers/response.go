@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strings"
 
 	"github.com/asaskevich/govalidator"
 	"github.com/go-playground/validator/v10"
@@ -78,7 +79,9 @@ func ValidationError(data interface{}) error {
 
 func Validation(dataString ...string) error {
 	for _, value := range dataString {
-		if boolName := govalidator.IsAlpha(value); !boolName {
+		splitValue := strings.Split(value, " ")
+		cekValues := strings.Join(splitValue, "")
+		if boolName := govalidator.IsAlpha(cekValues); !boolName {
 			return errors.New("value : {"+ value +"} / please fill in the column with string data type /")
 		}
 	}
