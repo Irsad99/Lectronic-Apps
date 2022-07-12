@@ -24,8 +24,8 @@ func New() (http.Handler, error) {
 	}
 
 	c := cors.New(cors.Options{
-		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"*"},
+		AllowedMethods:   []string{"*"},
 		AllowedOrigins:   []string{"*"},
 		AllowCredentials: true,
 		Debug:            true,
