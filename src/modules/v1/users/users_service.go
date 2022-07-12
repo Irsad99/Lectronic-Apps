@@ -84,7 +84,7 @@ func (svc *user_service) AddUser(input *input.RegisterInput) (*help.Response, er
 		return nil, err
 	}
 
-	url := fmt.Sprintf("http://localhost:8080/user/verify?i=%s", token)
+	url := fmt.Sprintf("https://mylectronic.herokuapp.com/user/verify?i=%s", token)
 
 	email := []string{user.Email}
 	cc := []string{user.Email}
