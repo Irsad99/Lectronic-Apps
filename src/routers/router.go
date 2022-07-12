@@ -9,18 +9,27 @@ import (
 	"github.com/Irsad99/LectronicApp/src/modules/v1/products"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/reviews"
 	"github.com/Irsad99/LectronicApp/src/modules/v1/users"
+	"github.com/rs/cors"
 
 	// "github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
-func New() (*mux.Router, error) {
+func New() (http.Handler, error) {
 	mainRoute := mux.NewRouter()
 
 	db, err := database.New()
 	if err != nil {
 		return nil, err
 	}
+
+	c := cors.New(cors.Options{
+		AllowedHeaders:   []string{"X-Requested-With", "Content-Type", "Authorization"},
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
+		AllowedOrigins:   []string{"*"},
+		AllowCredentials: true,
+		Debug:            true,
+	}).Handler(mainRoute)
 
 	mainRoute.HandleFunc("/", sampleHandler).Methods("GET")
 	products.NewRouter(mainRoute, db)
@@ -29,7 +38,7 @@ func New() (*mux.Router, error) {
 	orders.NewRouter(mainRoute, db)
 	reviews.NewRouter(mainRoute, db)
 
-	return mainRoute, nil
+	return c, nil
 }
 
 func sampleHandler(w http.ResponseWriter, r *http.Request) {
