@@ -12,8 +12,6 @@
   · <a href="https://github.com/Irsad99/Lectronic-Apps/issues">Report Bug</a>
   · <a href="https://github.com/Irsad99/Lectronic-Apps/pulls">Request Feature</a>
 </p>
-
-
 ## Built with
 
 **Backend:**
@@ -86,6 +84,9 @@ Lectronic App is an application for selling electronic devices. users can order 
 
 ## Frontend Repository
 Frontend Lectronic [here](https://github.com/Irsad99/FE-Lectronics-App)
+
+## Documentation Postman
+End Point Backend Lectronic [here](https://s.id/EndPointLectronic)
 
 ### Contributors
 <a href = "https://github.com/Irsad99/FE-Lectronics-App/graphs/contributors">
