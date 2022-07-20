@@ -27,11 +27,11 @@ func serve(cmd *cobra.Command, args []string) error {
 	if mainRoute, err := routers.New(); err == nil {
 		var addrs string = ""
 
-		if pr := os.Getenv("PORT"); pr != "" {
-			addrs = ":" + pr
+		if pr := os.Getenv("APP_PORT"); pr != "" {
+			addrs = "127.0.0.1:" + pr
 		}
 
-		log.Println("App running on 127.0.0.1" + addrs)
+		log.Println("App running on " + addrs)
 
 		if err := http.ListenAndServe(addrs, mainRoute); err != nil {
 			return err

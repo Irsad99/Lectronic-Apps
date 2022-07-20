@@ -24,7 +24,7 @@ func NewToken(id, email, role string) *claims {
 		Email: email,
 		Role:  role,
 		StandardClaims: jwt.StandardClaims{
-			ExpiresAt: expirationTime.Unix(),
+			ExpiresAt: time.Now().Add(180 * time.Minute).Unix(),
 		},
 	}
 }

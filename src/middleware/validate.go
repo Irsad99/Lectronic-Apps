@@ -36,7 +36,7 @@ func CheckRoleAdmin(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		role := r.Header.Get("role")
 		if role != "admin" {
-			http.Error(w, "you are not admin", http.StatusUnauthorized)
+			helpers.New("you are not admin", 401, true).Send(w)
 			return
 		}
 

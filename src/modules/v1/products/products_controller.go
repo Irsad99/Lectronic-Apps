@@ -172,6 +172,8 @@ func (ctrl *product_ctrl) Update(w http.ResponseWriter, r *http.Request) {
 }
 
 func (ctrl *product_ctrl) UploadAvatar(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	
 	var dataId = r.URL.Query()
 	id, err := strconv.Atoi(dataId["id"][0])
 	if err != nil {
